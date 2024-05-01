@@ -1,0 +1,61 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book a Table</title>
+    <!-- Include necessary CSS and JS files (e.g., Bootstrap) -->
+</head>
+<body>
+<h1>Book a Table</h1>
+<form method="post" action="book_table.php">
+    <label for="table_number">Table Number:</label>
+    <input type="number" name="table_number" required>
+
+    <label for="booking_date">Booking Date:</label>
+    <input type="date" name="booking_date" required>
+
+    <label for="booking_time">Booking Time:</label>
+    <input type="time" name="booking_time" required>
+
+    <label for="guests_count">Number of Guests:</label>
+    <input type="number" name="guests_count" required>
+
+    <button type="submit">Book Now</button>
+</form>
+
+
+
+
+<?php
+// Check if the form is submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Get user input
+    $tableNumber = $_POST['table_number'];
+    $bookingDate = $_POST['booking_date'];
+    $bookingTime = $_POST['booking_time'];
+    $guestsCount = $_POST['guests_count'];
+
+
+
+    // Create a new booking element
+    $booking = new SimpleXMLElement('<booking/>');
+    $booking->addChild('table_number', $tableNumber);
+    $booking->addChild('booking_date', $bookingDate);
+    $booking->addChild('booking_time', $bookingTime);
+    $booking->addChild('guests_count', $guestsCount);
+
+    // Load existing XML file or create a new one
+    $xml = simplexml_load_file('tables.xml');
+    $xml->addChild('booking', $booking);
+
+    // Save changes back to the XML file
+    $xml->asXML('tables.xml');
+
+    // Redirect to a success page or display a confirmation message
+    header('Location: success.php');
+    exit();
+}
+?>
+</body>
+</html>
